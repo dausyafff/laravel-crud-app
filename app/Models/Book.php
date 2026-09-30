@@ -2,11 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    protected $table = 'book';
-    protected $fillable = ['title', 'pengarang', 'tahun_terbit'];
-    public $timestamps = true;
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'author',
+        'year',
+        'stock',
+        'description',
+    ];
+
+    protected $casts = [
+        'year' => 'integer',
+        'stock' => 'integer',
+    ];
 }

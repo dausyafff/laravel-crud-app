@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('book', function (Blueprint $table) {
             $table->id();
-            $table->string('title', "255");
-            $table->string('pengarang', "100");
-            $table->year('tahun_terbit');
+            $table->string('title');
+            $table->string('author');
+            $table->unsignedSmallInteger('year')->nullable();
+            $table->unsignedInteger('stock')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
