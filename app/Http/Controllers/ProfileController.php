@@ -21,6 +21,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
+        return view("profiles.edit", compact("profile"));
         //
     }
 
@@ -37,7 +38,18 @@ class ProfileController extends Controller
      */
     public function update(Request $request, Profile $profile)
     {
-        return view("profiles.edit", compact("profile"));
+
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id
+        ]);
+        $user->update($validated);
+
+        return redirect()
+            ->route('profiles.index')
+            ->with('success', 'Profile updated successfully.');
     }
 
     /**
