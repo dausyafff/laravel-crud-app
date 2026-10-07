@@ -57,6 +57,10 @@ class ProfileController extends Controller
      */
     public function destroy(Profile $profile)
     {
-        //
+        $profile->delete();
+
+        return redirect()
+            ->route("books.index")
+            ->with("success", "Book has been deleted.");
     }
 }
