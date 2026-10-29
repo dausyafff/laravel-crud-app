@@ -12,9 +12,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::latest()->paginate(10);
-
-        return view('books.index', compact('books'));
+        return response()->json(Book::latest()->get());
     }
 
     /**
@@ -30,7 +28,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $data = $request->validate([
             "title" => "required|string|max:255",
             "author" => "required|string|max:255",
             "year" => "required|integer|min:1000|max:" . date('Y'),
@@ -38,11 +36,8 @@ class BookController extends Controller
             "description" => "nullable|string"
         ]);
 
-        Book::create($validated);
-
-        return redirect()
-            ->route("books.index")
-            ->with("success", "Book created successfully.");
+        $book = Book::create($data);
+        return response()->json($book, 201);
     }
 
     /**
@@ -50,7 +45,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return view("books.show", compact("book"));
+        return response()->json($book);
     }
 
     /**
@@ -67,19 +62,16 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        $validated = $request->validate([
+        $data = $request->validate([
             "title" => "required|string|max:255",
             "author" => "required|string|max:255",
             "year" => "required|integer|min:1000|max:" . date('Y'),
             "stock" => "nullable|integer|min:0",
             "description" => "nullable|string"
         ]);
+        $book->update($data);
 
-        $book->update($validated);
-
-        return redirect()
-            ->route("books.index")
-            ->with("success", "Book updated successfully.");
+        return response()->json($book);
     }
 
     /**
@@ -89,8 +81,8 @@ class BookController extends Controller
     {
         $book->delete();
 
-        return redirect()
-            ->route("books.index")
-            ->with("success", "Book has been delete");
+        return response()->json([
+            "message" => "Book deleted successfully"
+        ]);
     }
 }
